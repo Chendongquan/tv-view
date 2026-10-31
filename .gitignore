@@ -6,6 +6,10 @@ dist/
 out/
 release/
 
+# Local Claude / agent tooling
+.claude/
+CLAUDE.md
+
 # Design-tool local state (DESIGN.md, design.json and surfaces are tracked)
 **/.impeccable/hook.cache.json
 **/.impeccable/config.local.json
