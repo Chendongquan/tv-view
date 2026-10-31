@@ -10,7 +10,7 @@ Windows 桌面应用（Electron）+ 两个命令行小工具（scrcpy / adb 封�
 
 ## 功能
 
-- Windows 安装包内置 scrcpy 5.0.1 和 adb，下载即用，不需要另外安装 Node.js 或 scrcpy。
+- Windows 安装包只包含应用本身；scrcpy 和 adb 需要单独安装（`winget install Genymobile.scrcpy`）。
 - 输入电视 IP → `adb connect` → scrcpy 画面嵌入应用窗口，而不是漂浮的独立窗口。
 - 右侧圆形点按板遥控器：方向 / OK / 返回 / 主页 / 菜单 / 最近 / 音量 ± / 静音 / 播放暂停 / 电源。方向键支持按住连发。
 - 电源键始终二次确认，避免误触把电视关机。
@@ -29,7 +29,13 @@ Windows 桌面应用（Electron）+ 两个命令行小工具（scrcpy / adb 封�
 - `tv-viewer-setup-<版本>-x64.exe`：安装版，创建开始菜单和桌面快捷方式，按用户安装，不需要管理员权限。
 - `tv-viewer-portable-<版本>-x64.exe`：便携版，双击运行；首次启动会解压到临时目录，稍慢一点。
 
-安装包已经内置 scrcpy 5.0.1 和 adb，不需要 Node.js，也不需要单独安装 scrcpy。安装包没有代码签名，Windows SmartScreen 可能提示“未知发布者”；确认文件来自本仓库 Releases 后再运行。
+安装包只包含应用本身，不包含 scrcpy / adb。使用前先安装 scrcpy（自带 adb）：
+
+```bash
+winget install Genymobile.scrcpy
+```
+
+安装包没有代码签名，Windows SmartScreen 可能提示“未知发布者”；确认文件来自本仓库 Releases 后再运行。
 
 ### 用 Agent 从源码配置
 
@@ -147,7 +153,7 @@ macOS、Linux 和其他电视型号尚未验证。
 - 电视端硬件编码会占用 GPU / 编码器，测帧率、动效前先点断开。
 - 如果窗口嵌入失败，scrcpy 会退化为独立窗口，遥控器仍然可用。
 - 安装包没有代码签名，Windows SmartScreen 会提示“未知发布者”；只从本仓库 Releases 下载。
-- 安装包内置固定 scrcpy 5.0.1；需要换版本时从源码运行，并设置 `SCRCPY` 指向目标版本。
+- 安装包不包含 scrcpy / adb，需要先安装 scrcpy；也可以用 `SCRCPY` / `ADB` 指向自定义版本。
 
 ## 安全与隐私
 
@@ -169,7 +175,7 @@ macOS、Linux 和其他电视型号尚未验证。
 | [设计系统](remote/DESIGN.md) | 颜色、字体、布局、组件和设计约束 |
 | [产品说明](remote/PRODUCT.md) | 目标用户、定位、能力边界 |
 | [贡献指南](CONTRIBUTING.md) | 报 bug、提 PR、代码约定 |
-| [第三方许可](remote/THIRD_PARTY_NOTICES.md) | 内置 scrcpy、adb、Electron 的许可说明 |
+| [第三方许可](remote/THIRD_PARTY_NOTICES.md) | scrcpy、adb、Electron 的许可说明（外部依赖不随包分发） |
 | [安全说明](SECURITY.md) | 威胁模型、ADB 端口风险、加固建议 |
 | [更新日志](CHANGELOG.md) | 版本变更 |
 
@@ -203,11 +209,10 @@ npm run check   # node --check 语法检查
 
 ```bash
 cd remote
-npm run fetch-vendor   # 下载 scrcpy 5.0.1 到 vendor/，或用 -FromPath 指定本地目录
 npm run dist           # 产物在 dist/
 ```
 
-`vendor/` 和 `dist/` 不提交到仓库。细节见 [开发与构建](docs/DEVELOPMENT.md)。
+`dist/` 不提交到仓库。细节见 [开发与构建](docs/DEVELOPMENT.md)。
 
 ## 参与贡献
 

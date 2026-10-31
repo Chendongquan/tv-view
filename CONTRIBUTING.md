@@ -26,7 +26,7 @@
 - 新增 UI 文案必须同时补 `i18n.js` 的 `zh` 和 `en`。
 - 新增设置项必须同步 `main.js` 的 `set-setting` 白名单。
 - 涉及 Windows 窗口行为的改动，在真实电视上验证连接、嵌入、满窗口、全屏。
-- 涉及打包配置的改动，至少跑一次 `npm run pack`，并确认 `dist/win-unpacked/resources/` 里有 `scrcpy/`、`app.asar.unpacked/embed-scrcpy.ps1`、`third_party/` 和 `THIRD_PARTY_NOTICES.md`。
+- 涉及打包配置的改动，至少跑一次 `npm run pack`，并确认 `dist/win-unpacked/resources/` 里有 `app.asar.unpacked/embed-scrcpy.ps1`、`THIRD_PARTY_NOTICES.md` 和 `LICENSE.txt`。
 - 不接受伪造的“已验证”描述；没测过的平台或设备就写没测过。
 
 ## 代码风格
@@ -40,13 +40,12 @@
 ```bash
 cd remote
 npm install
-npm run fetch-vendor   # 下载 scrcpy 5.0.1 到 vendor/（不提交）
 npm run check
 npm run pack           # 快速验证 dist/win-unpacked/
 npm run dist           # 安装版 + 便携版
 ```
 
-`vendor/` 和 `dist/` 不提交。改动 `electron-builder.yml`、`main.js` 的路径查找或 `scripts/fetch-vendor.ps1` 时，必须重新跑 `npm run pack` 并启动一次 `dist/win-unpacked/TV Viewer.exe`。
+`dist/` 不提交。改动 `electron-builder.yml`、`main.js` 的路径查找或 `embed-scrcpy.ps1` 相关逻辑时，必须重新跑 `npm run pack` 并启动一次 `dist/win-unpacked/TV Viewer.exe`。安装包不包含 scrcpy / adb，测试前请先在本机安装 scrcpy。
 
 ## 范围
 

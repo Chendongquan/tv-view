@@ -4,7 +4,7 @@ Node.js + Electron 做的电视投屏窗口：Apple TV 式的深色界面，左�
 
 ## 运行
 
-安装版和便携版已经内置 scrcpy 5.0.1 和 adb，不需要另外安装；从源码运行则需要 Node.js 22+ 和 scrcpy。
+安装包只包含应用本身，scrcpy 和 adb 需要单独安装；从源码运行还需要 Node.js 22+。
 
 ```bash
 cd remote
@@ -60,13 +60,13 @@ npm start
 - 默认无边框、顶栏拖动、交通灯全屏、满窗口 / 满屏幕切换、`Ctrl+Alt+W` / `Ctrl+Alt+F` / `Ctrl+Alt+H` 快捷键已验证；满屏幕下画面确实铺满显示器。
 - Apple/tvOS 深色改版：空闲、连接、错误、窄窗口（900 DIP）四态已渲染检查；检测器 `impeccable detect` 为 0 条 findings。
 - 设置页、中英文切换、电源确认、自动连接、掉线自动重连、红色放大断开图标均已实测；设置页在连接态能正确隐藏/恢复原生画面。
-- Windows 安装版和便携版已启动验证；打包后的 `resources\scrcpy` 中 adb / scrcpy 可执行，界面资源完整。
+- Windows 安装版和便携版已启动验证；界面资源完整。安装包不包含 scrcpy / adb，运行前需要在本机安装。
 - scrcpy 5.0.1、Electron 45。
 
 ## 注意
 
 - 满窗口 / 满屏幕时，画面是原生子窗口，会盖住网页里的按钮和提示；退出请用快捷键（`Esc`、`Ctrl+Alt+W`、`Ctrl+Alt+F`）。
-- 打包版使用安装目录 `resources\scrcpy` 里的内置 scrcpy / adb；源码运行时从 PATH 或默认安装位置查找（winget 的 scrcpy、Android SDK 的 platform-tools），也可以用 `SCRCPY` / `ADB` 环境变量指定完整路径。
+- 安装版和源码运行都从 PATH 或默认安装位置查找 scrcpy / adb（winget 的 scrcpy、Android SDK 的 platform-tools）；也可以用 `SCRCPY` / `ADB` 环境变量指定完整路径。
 - `TV` 环境变量可以预填电视地址。
 - 投屏用原生分辨率；不要加 `--max-size=1600`，那台电视会花屏（见上层 `README.md`）。
 - 同一台电视只开一个投屏实例。

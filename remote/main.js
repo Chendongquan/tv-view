@@ -91,10 +91,6 @@ function broadcastSettings() {
 
 function findAdb() {
   if (process.env.ADB) return process.env.ADB;
-  if (app.isPackaged) {
-    const bundled = path.join(process.resourcesPath, 'scrcpy', 'adb.exe');
-    if (fs.existsSync(bundled)) return bundled;
-  }
   const local = path.join(
     process.env.LOCALAPPDATA || '',
     'Android', 'Sdk', 'platform-tools', 'adb.exe'
@@ -104,10 +100,6 @@ function findAdb() {
 
 function findScrcpy() {
   if (process.env.SCRCPY) return process.env.SCRCPY;
-  if (app.isPackaged) {
-    const bundled = path.join(process.resourcesPath, 'scrcpy', 'scrcpy.exe');
-    if (fs.existsSync(bundled)) return bundled;
-  }
   const base = path.join(process.env.LOCALAPPDATA || '', 'Microsoft', 'WinGet', 'Packages');
   try {
     for (const name of fs.readdirSync(base)) {

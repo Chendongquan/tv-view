@@ -30,7 +30,7 @@
 
 - 只从本仓库的 GitHub Releases 下载安装版或便携版，并用发布页附带的 `SHA256SUMS.txt` 校验。
 - 安装包没有代码签名，Windows SmartScreen 会提示未知发布者；这与签名证书缺失有关，不代表文件被篡改。校验 SHA256 是当前最可靠的完整性检查。
-- 安装包内置的是官方 scrcpy 5.0.1 Windows 发布包和其中的 adb；项目没有修改这些二进制。
+- 安装包只包含应用本身，不包含 scrcpy 或 adb；运行时使用你本机已安装的 scrcpy / adb，请自行确认它们的来源和版本。
 - 如果从源码运行，`adb` / `scrcpy` 来自你的 PATH 或 `ADB` / `SCRCPY` 指定的路径，请自行确认来源。
 
 ## 加固建议

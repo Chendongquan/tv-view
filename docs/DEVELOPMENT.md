@@ -3,7 +3,7 @@
 ## 技术栈
 
 - Electron 45，纯 JavaScript，没有前端框架、打包器或编译步骤。
-- 开发运行时依赖外部 `adb` 和 `scrcpy`；Windows 打包版会把官方 scrcpy 发布包（含 adb）放进 `resources/scrcpy`，用户不需要另装。
+- scrcpy 和 adb 是外部依赖，不随安装包分发；用户需要自己安装，应用按 `ADB` / `SCRCPY`、Android SDK、PATH 的顺序查找。
 - 窗口嵌入使用 PowerShell 调 Win32 API，只在 Windows 上可用。
 
 ## 环境
@@ -42,10 +42,8 @@ remote/
   i18n.js              中英文文案
   embed-scrcpy.ps1     SetParent / MoveWindow / DPI
   electron-builder.yml Windows 打包配置
-  scripts/             fetch-vendor.ps1 / make-icon.ps1
+  scripts/             make-icon.ps1
   build/               icon.ico、安装向导用的 LICENSE.txt
-  third_party/         scrcpy / adb 的许可证文本
-  vendor/              构建时准备的 scrcpy（不提交）
   dist/                打包产物（不提交）
   THIRD_PARTY_NOTICES.md
   tv-viewer.cmd        双击启动（需先 npm install）
@@ -155,23 +153,8 @@ node -e "global.window={};require('./i18n.js');const d=window.TV_I18N;const z=Ob
 使用 electron-builder，配置在 `remote/electron-builder.yml`。
 
 1. 安装依赖：`npm install`
-2. 准备内置 scrcpy（5.0.1）：
-
-```bash
-cd remote
-npm run fetch-vendor
-```
-
-如果本机已经有解压好的 scrcpy，可以跳过下载：
-
-```bash
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/fetch-vendor.ps1 -FromPath "C:\path\to\scrcpy-win64-v5.0.1"
-```
-
-脚本会把 scrcpy 复制到 `vendor/scrcpy/`，并检查 `scrcpy.exe`、`scrcpy-server`、`adb.exe`、两个 adb DLL 和 `LICENSE.txt`。
-
-3. 图标已经提交在 `build/icon.ico`。改设计时运行 `npm run make-icon` 重新生成 PNG，再用仓库里的方式转成 ICO。
-4. 构建：
+2. 图标已经提交在 `build/icon.ico`。改设计时运行 `npm run make-icon` 重新生成 PNG，再用仓库里的方式转成 ICO。
+3. 构建：
 
 ```bash
 npm run dist    # NSIS 安装版 + 便携版，产物在 dist/
@@ -186,14 +169,13 @@ npm run pack    # 只生成 dist/win-unpacked/，用于快速验证
 
 打包后的 `resources/`：
 
-- `scrcpy/`：scrcpy、adb、DLL 和许可证；
 - `app.asar`：应用代码；
 - `app.asar.unpacked/embed-scrcpy.ps1`：PowerShell 必须能按真实路径执行，所以用 `asarUnpack` 解包；
-- `third_party/`、`THIRD_PARTY_NOTICES.md`、`LICENSE.txt`。
+- `THIRD_PARTY_NOTICES.md`、`LICENSE.txt`。
 
-打包运行时，`findAdb()` / `findScrcpy()` 会优先检查 `process.resourcesPath/scrcpy/`，然后才是 `ADB` / `SCRCPY` 环境变量、Android SDK 和 PATH。`app.isPackaged` 为真时，`embed-scrcpy.ps1` 从 `app.asar.unpacked` 读取；开发运行时仍用 `remote/` 下的文件。
+安装包不包含 scrcpy / adb，体积只包含 Electron 应用本身。运行时 `findAdb()` / `findScrcpy()` 按 `ADB` / `SCRCPY` 环境变量、Android SDK、PATH、WinGet 安装位置的顺序查找。`app.isPackaged` 为真时，`embed-scrcpy.ps1` 从 `app.asar.unpacked` 读取；开发运行时仍用 `remote/` 下的文件。
 
-许可证：scrcpy 5.0.1 是 Apache-2.0，adb 是 Apache-2.0。随包附 `third_party/` 下的许可证和 NOTICE；scrcpy 的 Windows 包还包含 FFmpeg、SDL3、libusb，条款见 `THIRD_PARTY_NOTICES.md`。
+许可证：scrcpy 和 adb 由用户自行安装，不随本应用分发，各自遵循 Apache-2.0；`THIRD_PARTY_NOTICES.md` 只说明依赖关系。Electron 的 MIT 许可见安装目录里的 Electron 许可文件。
 
 签名：目前没有代码签名证书，electron-builder 会跳过签名，Windows SmartScreen 会提示未知发布者。以后签名可配置 `CSC_LINK` / `CSC_KEY_PASSWORD`，或 `win.certificateFile`。
 

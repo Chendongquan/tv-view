@@ -8,7 +8,7 @@ Windows desktop app (Electron) plus two small CLI wrappers around scrcpy and adb
 
 ## Features
 
-- The Windows installer bundles scrcpy 5.0.1 and adb, so there is nothing else to install.
+- The Windows installer contains only the app; scrcpy and adb are installed separately.
 - Enter the TV IP, run `adb connect`, and embed the scrcpy picture into the app window instead of a floating window.
 - On-screen remote: D-pad (hold to repeat), OK, Back, Home, Menu, Recents, volume ±, mute, play/pause, power.
 - Frameless window with traffic lights, draggable top bar, always-on-top, fill-window and fullscreen modes.
@@ -26,7 +26,13 @@ Download the latest build from [GitHub Releases](https://github.com/Chendongquan
 - `tv-viewer-setup-<version>-x64.exe`: per-user installer with Start menu and desktop shortcuts; no administrator rights required.
 - `tv-viewer-portable-<version>-x64.exe`: portable build; the first launch extracts to a temporary directory and is a little slower.
 
-The installer already contains scrcpy 5.0.1 and adb. Node.js and a separate scrcpy install are not required. The binaries are not code-signed, so Windows SmartScreen may warn about an unknown publisher; only run files downloaded from this repository's Releases page.
+The installer contains only the app, not scrcpy or adb. Install scrcpy (which bundles adb) first:
+
+```bash
+winget install Genymobile.scrcpy
+```
+
+The binaries are not code-signed, so Windows SmartScreen may warn about an unknown publisher; only run files downloaded from this repository's Releases page.
 
 ### Let an agent set it up from source
 
@@ -102,7 +108,7 @@ Common issues, diagnostics and FAQ: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTI
 - Do not use `--max-size=1600` on the verified Xiaomi TV; it corrupts the picture. Use `1280` or native.
 - scrcpy requires Android 5.0+; Android 4.x is limited to screenshots via `tv-shot`.
 - The installer is not code-signed, so SmartScreen may warn; download only from this repository's Releases.
-- The installer pins scrcpy 5.0.1. To use another version, run from source and point `SCRCPY` at it.
+- The installer does not include scrcpy or adb; install scrcpy first, or point `SCRCPY` / `ADB` at a custom version.
 
 ## Development
 
@@ -117,11 +123,10 @@ Package the installer and portable build:
 
 ```bash
 cd remote
-npm run fetch-vendor   # download scrcpy 5.0.1 into vendor/, or pass -FromPath
 npm run dist           # artifacts in dist/
 ```
 
-`vendor/` and `dist/` are not committed. See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (Chinese).
+`dist/` is not committed. See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (Chinese).
 
 ## Docs
 

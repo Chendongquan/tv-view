@@ -22,8 +22,9 @@ node --version
 
 ## 安装版、便携版和源码运行
 
-- **安装版 / 便携版**：scrcpy 和 adb 已经放在安装目录的 `resources\scrcpy`，不需要 PATH，也不需要单独安装 scrcpy。便携版第一次启动会先解压到临时目录，慢几秒是正常的。
-- **源码运行（`npm start`）**：scrcpy / adb 按 `SCRCPY` / `ADB` 环境变量、Android SDK、PATH 的顺序查找；找不到时按下面的 scrcpy 小节处理。
+- **安装版 / 便携版**：只包含应用本身，scrcpy 和 adb 仍然需要单独安装。便携版第一次启动会先解压到临时目录，慢几秒是正常的。
+- **源码运行（`npm start`）**：需要 Node.js 22+、scrcpy 和 adb。
+- 两种方式都按 `SCRCPY` / `ADB` 环境变量、Android SDK、PATH、WinGet 安装位置的顺序查找 scrcpy / adb。
 - 安装包没有代码签名，SmartScreen 的“未知发布者”提示是预期的。只从本仓库 Releases 下载，并用发布页的 SHA256 校验。
 - 两种方式共用同一份配置：`%APPDATA%\TV Viewer\config.json`。
 
@@ -118,21 +119,21 @@ adb devices -l
 
 ### 报「没找到或无法启动 scrcpy」
 
-安装版和便携版不应该出现这个问题；如果出现，通常是安装目录的 `resources\scrcpy` 被删除或被安全软件隔离。重新安装，或用 `SCRCPY` 指向一个可用的 `scrcpy.exe`。
-
-源码运行时先安装：
+安装包不包含 scrcpy，需要先在本机安装：
 
 ```bash
 winget install Genymobile.scrcpy
 ```
 
-安装后重开终端 / 重新启动应用，让 PATH 生效。也可以直接指定路径：
+安装后重开终端 / 重新启动应用，让 PATH 生效。也可以用 `SCRCPY` 指向一个可用的 `scrcpy.exe`。源码运行时：
 
 ```bash
 set SCRCPY=C:\path\to\scrcpy.exe
 cd remote
 npm start
 ```
+
+安装版可以在启动前把 `SCRCPY` 设为用户环境变量。
 
 安全软件拦截 `scrcpy.exe` 时也会表现为启动失败，检查拦截日志。
 

@@ -22,7 +22,6 @@
     "start": "electron .",
     "check": "node --check main.js && node --check preload.js && node --check renderer.js && node --check i18n.js",
     "make-icon": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/make-icon.ps1",
-    "fetch-vendor": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/fetch-vendor.ps1",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --win nsis portable"
   },

@@ -21,12 +21,8 @@ files:
   - package.json
 
 extraResources:
-  - from: vendor/scrcpy
-    to: scrcpy
   - from: THIRD_PARTY_NOTICES.md
     to: THIRD_PARTY_NOTICES.md
-  - from: third_party
-    to: third_party
   - from: build/LICENSE.txt
     to: LICENSE.txt
 
