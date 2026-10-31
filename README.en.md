@@ -151,7 +151,7 @@ The MOD key is left Alt (or left Windows), not Ctrl. Ctrl combinations are forwa
 - Windows 11, 2560×1440 at 150% scaling.
 - Xiaomi MFTR0, Android 11, 1920×1080.
 - scrcpy 5.0.1, Electron 45.
-- The packaged app and portable build launch correctly; the installer was built but not executed on this machine.
+- The installer was installed and launched successfully; the portable build also starts.
 
 macOS, Linux and other TV models are not verified.
 

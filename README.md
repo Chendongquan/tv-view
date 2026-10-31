@@ -153,7 +153,7 @@ Git Bash 用 `.sh`，cmd / PowerShell 用 `cli\tv-view.cmd` 和 `cli\tv-shot.cmd
 - Windows 11，2560×1440，150% 缩放。
 - 小米 MFTR0，Android 11，1920×1080。
 - scrcpy 5.0.1，Electron 45。
-- 打包后的应用和便携版已启动验证；安装包已构建但未在本机执行安装。
+- 安装版已安装并运行验证；便携版也已启动验证。
 
 macOS、Linux 和其他电视型号尚未验证。
 
