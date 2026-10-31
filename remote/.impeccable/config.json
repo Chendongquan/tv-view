@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-31T06:10:16.623Z",
+        "reason": "assistant: verified style.css - buttons use 10x14 padding, main content 14px inset"
+      },
+      {
+        "rule": "monotonous-spacing",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-31T06:10:16.801Z",
+        "reason": "assistant: verified style.css - deliberate 6/8/10/12/14 spacing rhythm across remote groups"
+      }
+    ]
+  }
+}
