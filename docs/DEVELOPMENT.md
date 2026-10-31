@@ -47,7 +47,7 @@ remote/
   dist/                打包产物（不提交）
   THIRD_PARTY_NOTICES.md
   tv-viewer.cmd        双击启动（需先 npm install）
-tv-view.sh / .cmd      命令行投屏
+tv-view.sh / .cmd      命令行查看画面
 tv-shot.sh / .cmd      命令行截图
 docs/                  故障排查、开发文档
 ```

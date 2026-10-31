@@ -8,7 +8,7 @@
 
 这个工具的设计前提是：**你信任所在的局域网**。
 
-- 投屏、按键、截图全部走 ADB。ADB 的 5555 端口只由 RSA 授权保护；任何拿到你电脑上 adb 私钥、或已在你电视上授权过的设备，都能控制这台电视。
+- 画面、按键、截图全部走 ADB。ADB 的 5555 端口只由 RSA 授权保护；任何拿到你电脑上 adb 私钥、或已在你电视上授权过的设备，都能控制这台电视。
 - 不要把 5555 端口转发到公网，也不要在访客 Wi-Fi、酒店网络、公共网络里开启电视的 ADB 调试。
 - 不用时关闭电视的 ADB 调试，是最有效的收紧方式。
 
@@ -16,7 +16,7 @@
 
 - 没有账号、遥测或云端；除 `adb` / `scrcpy` 外不主动发起网络请求。
 - 配置以明文保存在 `%APPDATA%\TV Viewer\config.json`，内容只有电视地址和界面设置，不含密钥。
-- scrcpy server 只在投屏期间临时推送到电视并运行，退出即结束，不会安装常驻应用。
+- scrcpy server 只在连接期间临时推送到电视并运行，退出即结束，不会安装常驻应用。
 - `embed-scrcpy.ps1` 通过 `powershell.exe -ExecutionPolicy Bypass` 执行本地脚本，只调用 `user32.dll` 的窗口 API，不下载或执行远程代码。
 - 渲染进程启用 `contextIsolation`、关闭 `nodeIntegration`，并限制 CSP；界面数据用 `textContent` 写入。
 

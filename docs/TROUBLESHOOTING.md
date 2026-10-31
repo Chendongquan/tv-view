@@ -105,7 +105,7 @@ adb tcpip 5555
 adb connect 192.168.50.33:5555
 ```
 
-之后应用就可以走网络连接。GUI 走网络地址（`IP[:端口]`）；命令行 `tv-view.sh` 可以直接用 USB serial 投屏。
+之后应用就可以走网络连接。GUI 走网络地址（`IP[:端口]`）；命令行 `tv-view.sh` 可以直接用 USB serial 连接并查看画面。
 
 ### 有多台设备
 
@@ -170,7 +170,7 @@ Get-Process scrcpy | Select-Object Id, MainWindowTitle, MainWindowHandle
 ### 卡顿、延迟高
 
 - 优先 5GHz Wi-Fi，避免电视和电脑跨路由/跨网段；
-- GUI 按原生分辨率投屏。网络差时改用命令行降码率：
+- GUI 按原生分辨率显示画面。网络差时改用命令行降码率：
 
 ```bash
 ./tv-view.sh 192.168.50.33 --max-size=1280 --video-bit-rate=4M
@@ -259,16 +259,16 @@ Get-Process scrcpy | Select-Object Id, MainWindowTitle, MainWindowHandle
 不需要。
 
 **需要开 ADB 调试吗？**
-需要。投屏、按键、截图都走 ADB，没有调试授权就连不上。
+需要。画面、按键、截图都走 ADB，没有调试授权就连不上。
 
 **有声音吗？**
 没有。应用启动 scrcpy 时用了 `--no-audio`，声音仍从电视出。
 
 **会改电视吗？**
-不会常驻。scrcpy server 只在投屏期间临时运行，退出即结束。
+不会常驻。scrcpy server 只在连接期间临时运行，退出即结束。
 
 **需要联网吗？**
-投屏只需要局域网。首次安装 Node、scrcpy 等依赖需要联网。
+查看画面只需要局域网。首次安装 Node、scrcpy 等依赖需要联网。
 
 **能截图/录屏吗？**
 应用内不能。用 `./tv-shot.sh` 截图。

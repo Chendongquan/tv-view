@@ -305,7 +305,7 @@ Rectangular panels use continuous corners: 22px for cards and the settings panel
 ### Buttons
 
 - **Shape:** 10px corners and 44px height for the primary action; 8px corners for toolbar text and icon buttons; 10px for remote pills; 8px for icon segment cells.
-- **Primary:** full-width system orange with ground-colored text at 14px/590; hover to Orange Hover; press to `scale(0.99)`; disabled orange at 35% with 55% ground text. Its label shifts 连接并投屏 → 连接中… → 重新连接 and it is disabled while connecting.
+- **Primary:** full-width system orange with ground-colored text at 14px/590; hover to Orange Hover; press to `scale(0.99)`; disabled orange at 35% with 55% ground text. Its label shifts 连接 → 连接中… → 重新连接 and it is disabled while connecting.
 - **Hover / Focus:** background and color transition at 140ms ease, transform at 80ms ease; focus-visible is a 2px orange outline with a 2px offset. Disabled controls sit at 35% opacity with no transform.
 - **Secondary / Ghost:** icon buttons are 30px, 8px-radius transparent controls that gain white-8% on hover and orange-16% plus an orange glyph when active; the disconnect action uses the same control with a filled stop square and is disabled while idle or failed, turning red at 18px when enabled. The 30px status indicator is a white-6% chip with a link icon. The display control is a 2px-inset white-6% track with two 30×24px icon cells whose active cell is white-14%.
 
