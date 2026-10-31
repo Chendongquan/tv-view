@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>TV Viewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header id="toolbar">
+    <div class="traffic" role="group" aria-label="Window controls" data-i18n-aria="toolbar.windowControls">
+      <button id="win-close" class="light close" title="关闭" aria-label="关闭"
+              data-i18n-title="toolbar.close" data-i18n-aria="toolbar.close">
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 3.5l5 5M8.5 3.5l-5 5"/></svg>
+      </button>
+      <button id="win-min" class="light min" title="最小化" aria-label="最小化"
+              data-i18n-title="toolbar.minimize" data-i18n-aria="toolbar.minimize">
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 6h6"/></svg>
+      </button>
+      <button id="win-zoom" class="light zoom" title="全屏" aria-label="全屏"
+              data-i18n-title="toolbar.zoom" data-i18n-aria="toolbar.zoom">
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 5.5V3h2.5M9 6.5V9H6.5"/></svg>
+      </button>
+    </div>
+
+    <div class="app-title">TV Viewer</div>
+    <div class="toolbar-spacer"></div>
+
+    <div id="status" data-state="idle" role="status" aria-live="polite" aria-label="未连接" title="未连接">
+      <svg class="status-icon" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M6.5 9.5l3-3"/>
+        <path d="M7 11.5l-1 1a2.5 2.5 0 0 1-3.5-3.5l2-2a2.5 2.5 0 0 1 3.5 0"/>
+        <path d="M9 4.5l1-1a2.5 2.5 0 0 1 3.5 3.5l-2 2a2.5 2.5 0 0 1-3.5 0"/>
+        <path class="status-slash" d="M2.5 13.5l11-11"/>
+      </svg>
+    </div>
+
+    <button id="stop" class="icon-button" title="断开" aria-label="断开"
+            data-i18n-title="toolbar.stop" data-i18n-aria="toolbar.stop" disabled>
+      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+        <rect x="4" y="4" width="8" height="8" rx="1.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </button>
+
+    <button id="pin" class="icon-button" title="窗口置顶" aria-label="窗口置顶"
+            data-i18n-title="toolbar.pin" data-i18n-aria="toolbar.pin" aria-pressed="false">
+      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M6 2.5h4l-.6 3.2 2 2v1H4.6v-1l2-2z"/>
+        <path d="M8 8.7v4.8"/>
+      </svg>
+    </button>
+
+    <button id="remote-toggle" class="icon-button active" title="显示或隐藏遥控器"
+            aria-label="显示或隐藏遥控器" data-i18n-title="toolbar.remote" data-i18n-aria="toolbar.remote"
+            aria-pressed="true">
+      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+        <rect x="5.5" y="1.5" width="5" height="13" rx="2.5"/>
+        <circle cx="8" cy="4.2" r=".7" fill="currentColor" stroke="none"/>
+        <path d="M6.6 11.2h2.8"/>
+      </svg>
+    </button>
+
+    <button id="settings-toggle" class="icon-button" title="设置" aria-label="设置"
+            data-i18n-title="toolbar.settings" data-i18n-aria="toolbar.settings">
+      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M3 5h10M3 8h10M3 11h10"/>
+        <circle cx="6" cy="5" r="1.5"/>
+        <circle cx="10" cy="8" r="1.5"/>
+        <circle cx="7" cy="11" r="1.5"/>
+      </svg>
+    </button>
+
+    <div class="segmented" role="group" aria-label="Display mode" data-i18n-aria="toolbar.displayMode">
+      <button id="window-fill-toggle" class="segment icon-segment" title="铺满窗口（Ctrl+Alt+W）"
+              aria-label="铺满窗口" data-i18n-title="toolbar.fillWindow" data-i18n-aria="toolbar.fillWindow"
+              aria-pressed="false">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="2.5" y="3.5" width="11" height="9" rx="2"/>
+          <path d="M2.5 6.5h11"/>
+        </svg>
+      </button>
+      <button id="fullscreen-toggle" class="segment icon-segment" title="全屏（Ctrl+Alt+F）"
+              aria-label="全屏" data-i18n-title="toolbar.fullscreen" data-i18n-aria="toolbar.fullscreen"
+              aria-pressed="false">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 6V3h3M13 6V3h-3M3 10v3h3M13 10v3h-3"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section id="stage">
+      <div id="placeholder">
+        <div class="connect-card">
+          <div class="card-head">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="2.5" y="3.5" width="19" height="12.5" rx="2"/>
+                <path d="M8 19h8M12 16v3"/>
+              </svg>
+            </div>
+            <h1 class="ph-title" id="ph-title">连接电视</h1>
+          </div>
+
+          <div class="ph-error hidden" id="ph-error">
+            <span id="ph-error-text"></span>
+          </div>
+
+          <div class="connect-form">
+            <input id="serial" placeholder="192.168.50.33" aria-label="电视 IP"
+                   data-i18n-aria="connect.ip" spellcheck="false" autocomplete="off">
+            <button id="connect" class="primary">连接并投屏</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside id="remote" aria-label="遥控器" data-i18n-aria="remote.title">
+      <div class="clickpad" role="group" aria-label="方向键" data-i18n-aria="remote.pad">
+        <div class="clickpad-ring" aria-hidden="true"></div>
+        <button class="pad up" data-key="KEYCODE_DPAD_UP" data-repeat aria-label="上" data-i18n-aria="remote.up">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 9.5L8 5.5l4 4"/></svg>
+        </button>
+        <button class="pad right" data-key="KEYCODE_DPAD_RIGHT" data-repeat aria-label="右" data-i18n-aria="remote.right">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 4l4 4-4 4"/></svg>
+        </button>
+        <button class="pad down" data-key="KEYCODE_DPAD_DOWN" data-repeat aria-label="下" data-i18n-aria="remote.down">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6.5l4 4 4-4"/></svg>
+        </button>
+        <button class="pad left" data-key="KEYCODE_DPAD_LEFT" data-repeat aria-label="左" data-i18n-aria="remote.left">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.5 4l-4 4 4 4"/></svg>
+        </button>
+        <button class="pad ok" data-key="KEYCODE_DPAD_CENTER" aria-label="确定" data-i18n-aria="remote.ok">OK</button>
+      </div>
+
+      <div class="remote-row">
+        <button class="pill" data-key="KEYCODE_BACK">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.5 3.5L5 8l4.5 4.5"/></svg>
+          <span data-i18n="remote.back">返回</span>
+        </button>
+        <button class="pill" data-key="KEYCODE_HOME">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 7l5-4 5 4v6H3z"/><path d="M6.5 13V9.5h3V13"/></svg>
+          <span data-i18n="remote.home">主页</span>
+        </button>
+      </div>
+
+      <div class="remote-row">
+        <button class="pill" data-key="KEYCODE_MENU">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h10M3 8h10M3 11h10"/></svg>
+          <span data-i18n="remote.menu">菜单</span>
+        </button>
+        <button class="pill" data-key="KEYCODE_APP_SWITCH">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="8" height="7" rx="1.5"/><path d="M6 12.5h7"/></svg>
+          <span data-i18n="remote.recents">最近</span>
+        </button>
+      </div>
+
+      <div class="remote-row">
+        <button class="pill" data-key="KEYCODE_VOLUME_DOWN">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6h2l3-2.5v9L5 10H3z"/><path d="M11 6.5v3"/></svg>
+          <span data-i18n="remote.volumeDown">音量 −</span>
+        </button>
+        <button class="pill" data-key="KEYCODE_VOLUME_UP">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6h2l3-2.5v9L5 10H3z"/><path d="M10.5 5.5a3.5 3.5 0 0 1 0 5"/></svg>
+          <span data-i18n="remote.volumeUp">音量 +</span>
+        </button>
+      </div>
+
+      <div class="remote-row">
+        <button class="pill" data-key="KEYCODE_VOLUME_MUTE">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6h2l3-2.5v9L5 10H3z"/><path d="M11 5.5l3 5M14 5.5l-3 5"/></svg>
+          <span data-i18n="remote.mute">静音</span>
+        </button>
+        <button class="pill" data-key="KEYCODE_MEDIA_PLAY_PAUSE">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5l7 4.5-7 4.5z"/></svg>
+          <span data-i18n="remote.playPause">播放/暂停</span>
+        </button>
+      </div>
+
+      <button class="pill power" id="remote-power" data-key="KEYCODE_POWER">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v4"/><path d="M5 4.2a4.5 4.5 0 1 0 6 0"/></svg>
+        <span data-i18n="remote.power">电源</span>
+      </button>
+    </aside>
+  </main>
+
+  <div id="power-confirm" class="confirm hidden" role="alertdialog" aria-labelledby="power-confirm-text">
+    <span id="power-confirm-text" data-i18n="power.confirm">关闭电视？</span>
+    <div class="confirm-actions">
+      <button id="power-cancel" class="confirm-cancel" data-i18n="common.cancel">取消</button>
+      <button id="power-ok" class="confirm-off" data-i18n="power.off">关机</button>
+    </div>
+  </div>
+
+  <div id="settings" class="hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="sheet-backdrop"></div>
+    <div class="sheet-panel">
+      <header class="sheet-head">
+        <h2 id="settings-title" data-i18n="settings.title">设置</h2>
+        <button id="settings-close" class="icon-button" title="关闭设置" aria-label="关闭设置"
+                data-i18n-title="settings.close" data-i18n-aria="settings.close">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+        </button>
+      </header>
+
+      <section class="setting-group">
+        <h3 data-i18n="settings.general">通用</h3>
+        <div class="setting-row">
+          <span class="setting-label" data-i18n="settings.language">语言</span>
+          <div class="segmented" id="language-control" role="group" aria-label="Language"
+               data-i18n-aria="settings.language">
+            <button class="segment" id="lang-zh" data-lang="zh">中文</button>
+            <button class="segment" id="lang-en" data-lang="en">English</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label" data-i18n="settings.autoConnect">启动时自动连接</span>
+          <button class="switch" id="setting-autoConnect" role="switch" aria-checked="false" data-setting="autoConnect"
+                  aria-label="启动时自动连接" data-i18n-aria="settings.autoConnect">
+            <span class="switch-knob"></span>
+          </button>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label" data-i18n="settings.autoReconnect">掉线后自动重连</span>
+          <button class="switch" id="setting-autoReconnect" role="switch" aria-checked="true" data-setting="autoReconnect"
+                  aria-label="掉线后自动重连" data-i18n-aria="settings.autoReconnect">
+            <span class="switch-knob"></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="setting-group">
+        <h3 data-i18n="settings.display">显示</h3>
+        <div class="setting-row">
+          <span class="setting-label" data-i18n="settings.alwaysOnTop">窗口置顶</span>
+          <button class="switch" id="setting-alwaysOnTop" role="switch" aria-checked="false" data-setting="alwaysOnTop"
+                  aria-label="窗口置顶" data-i18n-aria="settings.alwaysOnTop">
+            <span class="switch-knob"></span>
+          </button>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label" data-i18n="settings.showRemote">显示遥控器</span>
+          <button class="switch" id="setting-showRemote" role="switch" aria-checked="true" data-setting="showRemote"
+                  aria-label="显示遥控器" data-i18n-aria="settings.showRemote">
+            <span class="switch-knob"></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="setting-group">
+        <h3 data-i18n="settings.remote">遥控器</h3>
+        <div class="setting-row">
+          <span class="setting-label" data-i18n="settings.repeat">方向键连发</span>
+          <div class="segmented" id="repeat-control" role="group" aria-label="D-pad repeat"
+               data-i18n-aria="settings.repeat">
+            <button class="segment" id="repeat-standard" data-repeat="standard" data-i18n="settings.repeatStandard">标准</button>
+            <button class="segment" id="repeat-fast" data-repeat="fast" data-i18n="settings.repeatFast">快</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="setting-group">
+        <h3 data-i18n="settings.about">关于</h3>
+        <div class="setting-row">
+          <span class="setting-label" data-i18n="settings.version">版本</span>
+          <span class="setting-value" id="version-value">0.1.0</span>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label" data-i18n="settings.shortcuts">快捷键</span>
+          <span class="setting-value mono">Esc · Ctrl+Alt+W · Ctrl+Alt+F · Ctrl+Alt+H</span>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

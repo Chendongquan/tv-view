@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+release/
+remote/vendor/
+
+# Design-tool local state (DESIGN.md / PRODUCT.md are tracked)
+.impeccable/
+
+# Logs and local captures
+*.log
+npm-debug.log*
+tv-shot.png
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini

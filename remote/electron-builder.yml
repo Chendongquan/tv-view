@@ -1,0 +1,54 @@
+appId: com.chendongquan.tvviewer
+productName: TV Viewer
+copyright: Copyright © 2026 Chendongquan
+
+directories:
+  output: dist
+  buildResources: build
+
+asar: true
+asarUnpack:
+  - embed-scrcpy.ps1
+
+files:
+  - main.js
+  - preload.js
+  - renderer.js
+  - i18n.js
+  - index.html
+  - style.css
+  - embed-scrcpy.ps1
+  - package.json
+
+extraResources:
+  - from: vendor/scrcpy
+    to: scrcpy
+  - from: THIRD_PARTY_NOTICES.md
+    to: THIRD_PARTY_NOTICES.md
+  - from: third_party
+    to: third_party
+  - from: build/LICENSE.txt
+    to: LICENSE.txt
+
+win:
+  target:
+    - target: nsis
+      arch: x64
+    - target: portable
+      arch: x64
+  icon: build/icon.ico
+  requestedExecutionLevel: asInvoker
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: TV Viewer
+  deleteAppDataOnUninstall: false
+  license: LICENSE.txt
+  artifactName: ${name}-setup-${version}-${arch}.${ext}
+
+portable:
+  artifactName: ${name}-portable-${version}-${arch}.${ext}
