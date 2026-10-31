@@ -1,7 +1,7 @@
 @echo off
 rem Save one PNG of the TV screen. Works on every Android version.
-rem   tv-shot                     -> tv-shot.png from %TV% or the only device
-rem   tv-shot before.png 192.168.50.33
+rem   cli\tv-shot.cmd                     -> tv-shot.png from %TV% or the only device
+rem   cli\tv-shot.cmd before.png 192.168.50.33
 setlocal
 
 set "OUT=%~1"

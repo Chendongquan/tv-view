@@ -117,12 +117,21 @@ Get-FileHash .\tv-viewer-setup-0.1.0-x64.exe -Algorithm SHA256
 
 ```bash
 winget install Genymobile.scrcpy
-cd remote
+cd app
 npm install
 npm start
 ```
 
-装好依赖后也可以双击 `remote/tv-viewer.cmd`，不弹控制台。
+装好依赖后也可以双击 `app/tv-viewer.cmd`，不弹控制台。
+
+### 命令行（可选）
+
+```bash
+./cli/tv-view.sh 192.168.50.33
+./cli/tv-shot.sh before.png 192.168.50.33
+```
+
+Git Bash 用 `.sh`，cmd / PowerShell 用 `cli\tv-view.cmd` 和 `cli\tv-shot.cmd`。完整用法见 [cli/README.md](cli/README.md)。
 
 ## 快捷键
 
@@ -155,7 +164,7 @@ macOS、Linux 和其他电视型号尚未验证。
 - **需要 root 吗？** 不需要。
 - **有声音吗？** 没有，声音仍从电视出。
 - **支持 macOS / Linux 吗？** 命令行可以；带遥控器和窗口嵌入的 GUI 目前仅 Windows。
-- **支持 Android 4.x 吗？** 画面功能要求 Android 5.0+；4.x 只能用 `tv-shot` 截图。
+- **支持 Android 4.x 吗？** 画面功能要求 Android 5.0+；4.x 只能用 `cli/tv-shot` 截图。
 - **能同时连两台电视吗？** 一个窗口一台，多实例的全局快捷键会冲突。
 
 更多问题和排查步骤见 [故障排查](docs/TROUBLESHOOTING.md)。
@@ -186,10 +195,10 @@ macOS、Linux 和其他电视型号尚未验证。
 | --- | --- |
 | [故障排查](docs/TROUBLESHOOTING.md) | 连不上、授权、无线调试、嵌入失败、按键、重连、FAQ |
 | [开发与构建](docs/DEVELOPMENT.md) | 目录、IPC、窗口嵌入原理、配置字段、i18n、打包和发布 |
-| [应用细节](remote/README.md) | 界面、显示模式、遥控器、设置、已验证项 |
-| [设计系统](remote/DESIGN.md) | 颜色、字体、布局、组件和设计约束 |
-| [产品说明](remote/PRODUCT.md) | 目标用户、定位、能力边界 |
-| [第三方许可](remote/THIRD_PARTY_NOTICES.md) | scrcpy、adb、Electron 的许可说明（外部依赖不随包分发） |
+| [应用细节](docs/APP.md) | 界面、显示模式、遥控器、设置、已验证项 |
+| [设计系统](docs/DESIGN.md) | 颜色、字体、布局、组件和设计约束 |
+| [产品说明](docs/PRODUCT.md) | 目标用户、定位、能力边界 |
+| [第三方许可](app/THIRD_PARTY_NOTICES.md) | scrcpy、adb、Electron 的许可说明（外部依赖不随包分发） |
 | [贡献指南](CONTRIBUTING.md) | 报 bug、提 PR、代码约定 |
 | [安全说明](SECURITY.md) | 威胁模型、ADB 端口风险、加固建议 |
 | [更新日志](CHANGELOG.md) | 版本变更 |
@@ -200,7 +209,7 @@ macOS、Linux 和其他电视型号尚未验证。
 <summary>展开目录</summary>
 
 ```text
-remote/                  Electron 桌面应用
+app/                    Electron 桌面应用
   main.js                adb / scrcpy / 窗口嵌入 / IPC / 全局快捷键
   preload.js             contextBridge 暴露的最小 API
   renderer.js            界面状态、遥控按键、窗口拖动、画面区域上报
@@ -208,9 +217,20 @@ remote/                  Electron 桌面应用
   index.html style.css   无边框界面
   i18n.js                中英文文案
   electron-builder.yml   Windows 打包配置
-tv-view.sh / .cmd        命令行查看画面
-tv-shot.sh / .cmd        命令行截图
-docs/                    故障排查、开发与构建
+  build/ scripts/        图标与构建脚本
+  THIRD_PARTY_NOTICES.md 随安装包分发的第三方许可
+cli/                    命令行工具
+  tv-view.sh / .cmd      命令行查看画面
+  tv-shot.sh / .cmd      命令行截图
+  README.md              用法说明
+docs/                   项目文档
+  APP.md                 应用细节
+  DESIGN.md              设计系统
+  PRODUCT.md             产品说明
+  DEVELOPMENT.md         开发与构建
+  TROUBLESHOOTING.md     故障排查
+  images/                主图
+  releases/              版本发布说明
 ```
 
 主进程启动 scrcpy，渲染进程把画面区域的 CSS 矩形通过 IPC 报给主进程，PowerShell 用 `SetParent` 把 scrcpy 窗口嵌进 Electron 窗口并定位；按键走 `adb shell input keyevent`，不依赖 scrcpy 窗口焦点。
@@ -220,7 +240,7 @@ docs/                    故障排查、开发与构建
 ## 开发
 
 ```bash
-cd remote
+cd app
 npm install
 npm start       # 开发运行
 npm run check   # node --check 语法检查
@@ -229,7 +249,7 @@ npm run check   # node --check 语法检查
 打包 Windows 安装版和便携版：
 
 ```bash
-cd remote
+cd app
 npm run dist           # 产物在 dist/
 ```
 

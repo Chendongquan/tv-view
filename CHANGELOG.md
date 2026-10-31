@@ -10,7 +10,7 @@
 - 全局快捷键：`Ctrl+Alt+H` 遥控器、`Ctrl+Alt+W` 满窗口、`Ctrl+Alt+F` / `Ctrl+Alt+Enter` 全屏。
 - 设置：中 / 英文切换、启动自动连接、掉线自动重连、方向键连发速度、窗口置顶、显示遥控器。
 - 掉线自动重连（最多 3 次）；窗口嵌入失败时退化为独立 scrcpy 窗口。
-- 命令行工具：`tv-view` 查看画面、`tv-shot` 截图（兼容 Android 4.x）。
+- 命令行工具：`cli/tv-view` 查看画面、`cli/tv-shot` 截图（兼容 Android 4.x）。
 - Windows 安装版和便携版，只包含应用本身；scrcpy / adb 需要单独安装。
 - 安装包未做代码签名；发布页提供 SHA256 校验文件。
 - 附带 scrcpy / adb / Electron 的第三方许可说明。

@@ -1,8 +1,8 @@
 @echo off
 rem Mirror an Android TV's screen to this PC over ADB.
-rem   tv-view                     use %TV% or the only connected device
-rem   tv-view 192.168.50.33       connect to and mirror that TV
-rem   tv-view 192.168.50.33 --max-size=1280 --video-bit-rate=4M
+rem   cli\tv-view.cmd                     use %TV% or the only connected device
+rem   cli\tv-view.cmd 192.168.50.33       connect to and mirror that TV
+rem   cli\tv-view.cmd 192.168.50.33 --max-size=1280 --video-bit-rate=4M
 rem Any argument that starts with - is passed to scrcpy.
 setlocal EnableDelayedExpansion
 
@@ -36,7 +36,7 @@ if not defined SERIAL (
   )
 )
 if not defined SERIAL (
-  echo No TV found. Turn on ADB debugging, then: tv-view ^<TV-IP^>
+  echo No TV found. Turn on ADB debugging, then: cli\tv-view.cmd ^<TV-IP^>
   exit /b 1
 )
 
@@ -58,11 +58,11 @@ set "ADB=%ADB_EXE%"
 exit /b %errorlevel%
 
 :usage
-echo Usage: tv-view [TV-IP[:port]] [scrcpy options]
+echo Usage: cli\tv-view.cmd [TV-IP[:port]] [scrcpy options]
 echo   No argument: uses %%TV%% or the only device already connected.
 echo   Examples:
-echo     tv-view
-echo     tv-view 192.168.50.33
-echo     tv-view 192.168.50.33 --max-size=1280 --video-bit-rate=4M
+echo     cli\tv-view.cmd
+echo     cli\tv-view.cmd 192.168.50.33
+echo     cli\tv-view.cmd 192.168.50.33 --max-size=1280 --video-bit-rate=4M
 echo Click the window first. Arrows = D-pad, Enter = OK, Alt+B or right-click = Back, Alt+H = Home.
 exit /b 0

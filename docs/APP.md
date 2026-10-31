@@ -7,12 +7,12 @@ Node.js + Electron 做的电视画面窗口：Apple TV 式的深色界面，左�
 安装包只包含应用本身，scrcpy 和 adb 需要单独安装；从源码运行还需要 Node.js 22+。
 
 ```bash
-cd remote
+cd app
 npm install     # 首次
 npm start
 ```
 
-或者直接双击 `tv-viewer.cmd`（不弹控制台）。
+或者直接双击 `app/tv-viewer.cmd`（不弹控制台）。
 
 在画面区中央的连接卡里填电视 IP（不带端口会自动补 `:5555`），点「连接」。连接成功后画面会接管舞台，右侧遥控器点亮。
 
@@ -68,13 +68,16 @@ npm start
 - 满窗口 / 满屏幕时，画面是原生子窗口，会盖住网页里的按钮和提示；退出请用快捷键（`Esc`、`Ctrl+Alt+W`、`Ctrl+Alt+F`）。
 - 安装版和源码运行都从 PATH 或默认安装位置查找 scrcpy / adb（winget 的 scrcpy、Android SDK 的 platform-tools）；也可以用 `SCRCPY` / `ADB` 环境变量指定完整路径。
 - `TV` 环境变量可以预填电视地址。
-- 画面使用原生分辨率；不要加 `--max-size=1600`，那台电视会花屏（见上层 `README.md`）。
+- 画面使用原生分辨率；不要加 `--max-size=1600`，那台电视会花屏（见根目录 [README.md](../README.md)）。
 - 同一台电视只开一个 scrcpy 实例。
 - 测帧率、动效前先点断开图标：电视端编码会占 GPU/编码器。
 - 如果窗口嵌入失败，scrcpy 会退化为单独窗口显示，遥控器仍然可用。
 
 ## 更多文档
 
-- [故障排查](../docs/TROUBLESHOOTING.md)
-- [开发与构建](../docs/DEVELOPMENT.md)
+- [故障排查](TROUBLESHOOTING.md)
+- [开发与构建](DEVELOPMENT.md)
+- [设计系统](DESIGN.md)
+- [产品说明](PRODUCT.md)
+- [第三方许可](../app/THIRD_PARTY_NOTICES.md)
 - [贡献指南](../CONTRIBUTING.md)

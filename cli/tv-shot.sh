@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Save one PNG of the TV screen (works on every Android version, incl. 4.x Lite TVs).
-#   ./tv-shot.sh                     -> tv-shot.png from $TV or the only device
-#   ./tv-shot.sh before.png 192.168.50.33
+#   ./cli/tv-shot.sh                     -> tv-shot.png from $TV or the only device
+#   ./cli/tv-shot.sh before.png 192.168.50.33
 set -euo pipefail
 
 out="${1:-tv-shot.png}"

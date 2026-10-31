@@ -17,7 +17,7 @@
 ## 启动
 
 ```bash
-cd remote
+cd app
 npm install
 npm start
 ```
@@ -33,7 +33,7 @@ npm run check
 ## 目录
 
 ```
-remote/
+app/
   main.js              主进程：adb / scrcpy / 窗口嵌入 / IPC / 快捷键 / 配置
   preload.js           contextBridge 白名单
   renderer.js          界面状态、遥控按键、窗口拖动、画面矩形上报
@@ -47,9 +47,18 @@ remote/
   dist/                打包产物（不提交）
   THIRD_PARTY_NOTICES.md
   tv-viewer.cmd        双击启动（需先 npm install）
-tv-view.sh / .cmd      命令行查看画面
-tv-shot.sh / .cmd      命令行截图
-docs/                  故障排查、开发文档
+cli/                   命令行工具
+  tv-view.sh / .cmd    命令行查看画面
+  tv-shot.sh / .cmd    命令行截图
+  README.md            用法说明
+docs/                  项目文档
+  APP.md               应用细节
+  DESIGN.md            设计系统
+  PRODUCT.md           产品说明
+  DEVELOPMENT.md       开发与构建
+  TROUBLESHOOTING.md   故障排查
+  images/              主图
+  releases/            版本发布说明
 ```
 
 ## 进程模型
@@ -135,7 +144,7 @@ flowchart LR
 - 新增文案时同时补 `zh` 和 `en`，并在 HTML 里加对应 `data-i18n*`。可以用下面的命令检查两边 key 是否对齐：
 
 ```bash
-cd remote
+cd app
 node -e "global.window={};require('./i18n.js');const d=window.TV_I18N;const z=Object.keys(d.zh),e=Object.keys(d.en);console.log(z.length,e.length);console.log(z.filter(k=>!(k in d.en)),e.filter(k=>!(k in d.zh)))"
 ```
 
@@ -150,7 +159,7 @@ node -e "global.window={};require('./i18n.js');const d=window.TV_I18N;const z=Ob
 
 ## 打包
 
-使用 electron-builder，配置在 `remote/electron-builder.yml`。
+使用 electron-builder，配置在 `app/electron-builder.yml`。
 
 1. 安装依赖：`npm install`
 2. 图标已经提交在 `build/icon.ico`。改设计时运行 `npm run make-icon` 重新生成 PNG，再用仓库里的方式转成 ICO。
@@ -173,7 +182,7 @@ npm run pack    # 只生成 dist/win-unpacked/，用于快速验证
 - `app.asar.unpacked/embed-scrcpy.ps1`：PowerShell 必须能按真实路径执行，所以用 `asarUnpack` 解包；
 - `THIRD_PARTY_NOTICES.md`、`LICENSE.txt`。
 
-安装包不包含 scrcpy / adb，体积只包含 Electron 应用本身。运行时 `findAdb()` / `findScrcpy()` 按 `ADB` / `SCRCPY` 环境变量、Android SDK、PATH、WinGet 安装位置的顺序查找。`app.isPackaged` 为真时，`embed-scrcpy.ps1` 从 `app.asar.unpacked` 读取；开发运行时仍用 `remote/` 下的文件。
+安装包不包含 scrcpy / adb，体积只包含 Electron 应用本身。运行时 `findAdb()` / `findScrcpy()` 按 `ADB` / `SCRCPY` 环境变量、Android SDK、PATH、WinGet 安装位置的顺序查找。`app.isPackaged` 为真时，`embed-scrcpy.ps1` 从 `app.asar.unpacked` 读取；开发运行时仍用 `app/` 下的文件。
 
 许可证：scrcpy 和 adb 由用户自行安装，不随本应用分发，各自遵循 Apache-2.0；`THIRD_PARTY_NOTICES.md` 只说明依赖关系。Electron 的 MIT 许可见安装目录里的 Electron 许可文件。
 
@@ -183,13 +192,13 @@ npm run pack    # 只生成 dist/win-unpacked/，用于快速验证
 
 ## 发布
 
-1. 更新 `remote/package.json` 的 `version` 和 `CHANGELOG.md`。
-2. `cd remote && npm run check`。
+1. 更新 `app/package.json` 的 `version` 和 `CHANGELOG.md`。
+2. `cd app && npm run check`。
 3. `npm run dist`，然后用 `git` 确认产物在 `dist/`（不提交）。
 4. 生成校验文件：
 
 ```bash
-cd remote/dist
+cd app/dist
 sha256sum *.exe > SHA256SUMS.txt
 ```
 

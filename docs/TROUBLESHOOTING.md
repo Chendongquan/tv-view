@@ -74,7 +74,7 @@ adb connect 192.168.50.33:5555
 
 ```bash
 set ADB=C:\path\to\adb.exe
-cd remote
+cd app
 npm start
 ```
 
@@ -105,7 +105,7 @@ adb tcpip 5555
 adb connect 192.168.50.33:5555
 ```
 
-之后应用就可以走网络连接。GUI 走网络地址（`IP[:端口]`）；命令行 `tv-view.sh` 可以直接用 USB serial 连接并查看画面。
+之后应用就可以走网络连接。GUI 走网络地址（`IP[:端口]`）；命令行 `cli/tv-view.sh` 可以直接用 USB serial 连接并查看画面。
 
 ### 有多台设备
 
@@ -129,7 +129,7 @@ winget install Genymobile.scrcpy
 
 ```bash
 set SCRCPY=C:\path\to\scrcpy.exe
-cd remote
+cd app
 npm start
 ```
 
@@ -173,7 +173,7 @@ Get-Process scrcpy | Select-Object Id, MainWindowTitle, MainWindowHandle
 - GUI 按原生分辨率显示画面。网络差时改用命令行降码率：
 
 ```bash
-./tv-view.sh 192.168.50.33 --max-size=1280 --video-bit-rate=4M
+./cli/tv-view.sh 192.168.50.33 --max-size=1280 --video-bit-rate=4M
 ```
 
 - 同一台电视不要同时开多个 scrcpy；
@@ -230,7 +230,7 @@ Get-Process scrcpy | Select-Object Id, MainWindowTitle, MainWindowHandle
 
 - GUI 的窗口嵌入只实现了 Windows，依赖 `user32.dll`。
 - 命令行脚本在 macOS / Linux 上可以用（需要 scrcpy、adb），但没有窗口嵌入和遥控器界面。
-- scrcpy 要求 Android 5.0+；4.x 的 Lite 电视只能用 `tv-shot` 截图。
+- scrcpy 要求 Android 5.0+；4.x 的 Lite 电视只能用 `cli/tv-shot` 截图。
 - Android 手机理论上也能连，但不是这个项目的验证目标。
 
 ## 配置与日志
@@ -247,7 +247,7 @@ Get-Process scrcpy | Select-Object Id, MainWindowTitle, MainWindowHandle
 
 看日志：
 
-- 从终端运行 `cd remote && npm start`，全局快捷键注册结果会打印在终端；
+- 从终端运行 `cd app && npm start`，全局快捷键注册结果会打印在终端；
 - scrcpy 的 stdout / stderr 默认被丢弃（`startScrcpy()` 里的 `stdio: 'ignore'`）。调试时临时改成 `'inherit'` 就能看到 scrcpy 的输出。
 
 ## FAQ
@@ -271,7 +271,7 @@ Get-Process scrcpy | Select-Object Id, MainWindowTitle, MainWindowHandle
 查看画面只需要局域网。首次安装 Node、scrcpy 等依赖需要联网。
 
 **能截图/录屏吗？**
-应用内不能。用 `./tv-shot.sh` 截图。
+应用内不能。用 `./cli/tv-shot.sh` 截图。
 
 **支持 macOS / Linux 吗？**
 命令行可以；带遥控器的 GUI 尚未实现。

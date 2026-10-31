@@ -115,12 +115,21 @@ Requirements: Windows 10/11, Node.js 22+, scrcpy (which bundles adb).
 
 ```bash
 winget install Genymobile.scrcpy
-cd remote
+cd app
 npm install
 npm start
 ```
 
-ADB debugging must be enabled on the TV, and both devices must be on the same LAN. After the first install you can also double-click `remote/tv-viewer.cmd`.
+ADB debugging must be enabled on the TV, and both devices must be on the same LAN. After the first install you can also double-click `app/tv-viewer.cmd`.
+
+### CLI (optional)
+
+```bash
+./cli/tv-view.sh 192.168.50.33
+./cli/tv-shot.sh before.png 192.168.50.33
+```
+
+Use `.cmd` (`cli\tv-view.cmd`, `cli\tv-shot.cmd`) in cmd / PowerShell. See [cli/README.md](cli/README.md) for full usage.
 
 ## Shortcuts
 
@@ -153,7 +162,7 @@ macOS, Linux and other TV models are not verified.
 - **Is root required?** No.
 - **Is there audio?** No; audio still comes from the TV.
 - **macOS / Linux?** The CLI scripts work; the GUI with the embedded picture is Windows-only for now.
-- **Android 4.x?** The picture requires Android 5.0+; 4.x is limited to screenshots via `tv-shot`.
+- **Android 4.x?** The picture requires Android 5.0+; 4.x is limited to screenshots via `cli/tv-shot`.
 - **Two TVs at once?** One TV per window; multiple instances fight over the global shortcuts.
 
 More answers and diagnostics: [Troubleshooting](docs/TROUBLESHOOTING.md).
@@ -184,10 +193,10 @@ See [Security](SECURITY.md) for the threat model.
 | --- | --- |
 | [Troubleshooting](docs/TROUBLESHOOTING.md) | Connection, authorization, wireless debugging, embedding, keys, FAQ |
 | [Development](docs/DEVELOPMENT.md) | Layout, IPC, window embedding, config, i18n, packaging |
-| [App details](remote/README.md) | UI, display modes, remote, settings |
-| [Third-party notices](remote/THIRD_PARTY_NOTICES.md) | scrcpy, adb and Electron licenses |
-| [Design system](remote/DESIGN.md) | Colors, type, layout, components |
-| [Product notes](remote/PRODUCT.md) | Users, positioning, scope |
+| [App details](docs/APP.md) | UI, display modes, remote, settings |
+| [Third-party notices](app/THIRD_PARTY_NOTICES.md) | scrcpy, adb and Electron licenses |
+| [Design system](docs/DESIGN.md) | Colors, type, layout, components |
+| [Product notes](docs/PRODUCT.md) | Users, positioning, scope |
 | [Contributing](CONTRIBUTING.md) | Issues, PRs, code conventions |
 | [Security](SECURITY.md) | Threat model and hardening |
 | [Changelog](CHANGELOG.md) | Version history |
@@ -198,7 +207,7 @@ See [Security](SECURITY.md) for the threat model.
 <summary>Show the tree</summary>
 
 ```text
-remote/                  Electron app
+app/                    Electron app
   main.js                ADB / scrcpy / embedding / IPC / shortcuts
   preload.js             contextBridge API
   renderer.js            UI state, remote keys, window drag, stage rect
@@ -206,9 +215,20 @@ remote/                  Electron app
   index.html style.css   Frameless UI
   i18n.js                Chinese / English strings
   electron-builder.yml   Windows packaging
-tv-view.sh / .cmd        CLI picture viewer
-tv-shot.sh / .cmd        CLI screenshot
-docs/                    Troubleshooting, development, releases
+  build/ scripts/        Icon and build scripts
+  THIRD_PARTY_NOTICES.md Third-party licenses shipped with the installer
+cli/                    Command-line tools
+  tv-view.sh / .cmd      CLI picture viewer
+  tv-shot.sh / .cmd      CLI screenshot
+  README.md              Usage
+docs/                   Project documentation
+  APP.md                 App details
+  DESIGN.md              Design system
+  PRODUCT.md             Product notes
+  DEVELOPMENT.md         Development and packaging
+  TROUBLESHOOTING.md     Troubleshooting
+  images/                Hero image
+  releases/              Release notes
 ```
 
 The main process starts scrcpy; the renderer reports the stage rectangle over IPC; PowerShell uses `SetParent` to embed the scrcpy window and position it. Keys go through `adb shell input keyevent`, independent of the scrcpy window focus.
@@ -218,7 +238,7 @@ The main process starts scrcpy; the renderer reports the stage rectangle over IP
 ## Development
 
 ```bash
-cd remote
+cd app
 npm install
 npm start       # development
 npm run check   # node --check
@@ -227,7 +247,7 @@ npm run check   # node --check
 Package the installer and portable build:
 
 ```bash
-cd remote
+cd app
 npm run dist           # artifacts in dist/
 ```
 

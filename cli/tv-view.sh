@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Mirror an Android TV's screen to this PC over ADB (Git Bash / WSL / macOS / Linux).
-#   ./tv-view.sh                     use $TV or the only connected device
-#   ./tv-view.sh 192.168.50.33       connect to and mirror that TV
-#   ./tv-view.sh 192.168.50.33 --max-size=1280 --video-bit-rate=4M
+#   ./cli/tv-view.sh                     use $TV or the only connected device
+#   ./cli/tv-view.sh 192.168.50.33       connect to and mirror that TV
+#   ./cli/tv-view.sh 192.168.50.33 --max-size=1280 --video-bit-rate=4M
 # Any argument starting with - is passed to scrcpy.
 set -euo pipefail
 
@@ -31,7 +31,7 @@ fi
 if [ -z "$serial" ]; then
   serial="$("$adb" devices | awk 'NR>1 && $2=="device"{print $1; exit}')"
 fi
-[ -n "$serial" ] || { echo "No TV found. Turn on ADB debugging, then: tv-view <TV-IP>" >&2; exit 1; }
+[ -n "$serial" ] || { echo "No TV found. Turn on ADB debugging, then: cli/tv-view.sh <TV-IP>" >&2; exit 1; }
 
 case "$serial" in *:*) "$adb" connect "$serial" >/dev/null 2>&1 || true ;; esac
 

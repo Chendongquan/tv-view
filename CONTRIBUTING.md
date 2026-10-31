@@ -38,7 +38,7 @@
 ## 打包
 
 ```bash
-cd remote
+cd app
 npm install
 npm run check
 npm run pack           # 快速验证 dist/win-unpacked/
@@ -51,4 +51,4 @@ npm run dist           # 安装版 + 便携版
 
 - GUI 目前只支持 Windows；macOS / Linux 的窗口嵌入欢迎讨论，但不要假设 Win32 方案能直接移植。
 - 电视端不安装 App、不引入第三方中转服务，这是项目的硬约束。
-- Android 4.x 只保证截图（`tv-shot`），不保证画面功能。
+- Android 4.x 只保证截图（`cli/tv-shot`），不保证画面功能。
