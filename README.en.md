@@ -19,40 +19,74 @@ Windows desktop app (Electron) plus two small CLI wrappers around scrcpy and adb
 
 ## Quick start
 
-### Download the installer (recommended)
+### Installer deployment (recommended, manual)
 
-Download the latest build from [GitHub Releases](https://github.com/Chendongquan/tv-view/releases):
+#### 1. Install scrcpy (one-time)
 
-- `tv-viewer-setup-<version>-x64.exe`: per-user installer with Start menu and desktop shortcuts; no administrator rights required.
-- `tv-viewer-portable-<version>-x64.exe`: portable build; the first launch extracts to a temporary directory and is a little slower.
-
-The installer contains only the app, not scrcpy or adb. Install scrcpy (which bundles adb) first:
+The installer contains only TV Viewer; scrcpy and adb are installed separately. The Windows scrcpy package bundles adb:
 
 ```bash
 winget install Genymobile.scrcpy
 ```
 
-The binaries are not code-signed, so Windows SmartScreen may warn about an unknown publisher; only run files downloaded from this repository's Releases page.
+Verify:
 
-### Let an agent set it up from source
-
-Paste this into Claude Code or any coding agent that can run commands, and replace `<TV-IP>` with your TV address:
-
-```text
-Set up TV Viewer on this Windows PC and connect it to my Android TV.
-
-1. Check for Node.js >= 22, scrcpy and adb; install anything missing with winget (package: Genymobile.scrcpy).
-2. Clone https://github.com/Chendongquan/tv-view into a sensible directory, then run npm install in remote/.
-3. The TV is at <TV-IP> (for example 192.168.50.33, port 5555 by default).
-   Confirm ADB debugging is enabled on the TV and that it is on the same LAN as this PC.
-4. Run npm start, enter the IP, and click the connect button. If it fails, check adb connect, the firewall, and port 5555.
-5. When it works, tell me the connected device, the available shortcuts, and how to enable "Connect on launch" in settings.
-
-Do not install anything on the TV and do not introduce any third-party relay service.
-If winget or npm is unavailable, tell me what is missing and give manual install steps first.
+```bash
+scrcpy --version
+adb version
 ```
 
-### Run from source
+#### 2. Download and install TV Viewer
+
+Download from [GitHub Releases](https://github.com/Chendongquan/tv-view/releases):
+
+- `tv-viewer-setup-<version>-x64.exe`: per-user installer with Start menu and desktop shortcuts; no administrator rights required.
+- `tv-viewer-portable-<version>-x64.exe`: portable build; the first launch extracts to a temporary directory and is a little slower.
+
+Optional: verify the download with `SHA256SUMS.txt`:
+
+```powershell
+Get-FileHash .\tv-viewer-setup-0.1.0-x64.exe -Algorithm SHA256
+```
+
+Run the installer and follow the wizard. The binaries are not code-signed, so Windows SmartScreen may warn about an unknown publisher; choose "More info → Run anyway" only if the file came from this repository's Releases.
+
+#### 3. Connect the TV
+
+1. Enable ADB debugging on the TV (Developer options → ADB debugging / network debugging).
+2. Put the PC and the TV on the same LAN.
+3. Open TV Viewer, enter the TV IP (port 5555 is appended automatically), and click connect.
+4. Accept the authorization dialog on the TV with its remote.
+5. The picture takes over the stage and the remote lights up.
+
+If it fails, see [Troubleshooting](docs/TROUBLESHOOTING.md).
+
+#### Portable build
+
+To skip installation, run `tv-viewer-portable-<version>-x64.exe`. It also requires scrcpy to be installed.
+
+### Let an agent deploy the installer (default)
+
+Paste this into Claude Code or any coding agent that can run commands, and replace `<TV-IP>` with your TV address. It installs scrcpy, downloads and silently installs TV Viewer, launches it, and connects to the TV.
+
+```text
+Install TV Viewer on this Windows PC and connect it to my Android TV.
+
+1. Install scrcpy first (it is not bundled): winget install --id Genymobile.scrcpy --accept-source-agreements --accept-package-agreements, then confirm scrcpy --version and adb version work.
+2. Download tv-viewer-setup-<latest version>-x64.exe and SHA256SUMS.txt from https://github.com/Chendongquan/tv-view/releases/latest into a temporary directory.
+3. Verify the installer SHA256 against SHA256SUMS.txt; stop and tell me if it does not match.
+4. Silent install: Start-Process -Wait -FilePath <installer> -ArgumentList '/S'.
+   If SmartScreen or another security prompt blocks it, tell me first; do not force a bypass.
+5. Find TV Viewer.exe under %LOCALAPPDATA%\Programs (or the Start menu shortcut) and launch it.
+6. The TV is at <TV-IP> (port 5555 by default). Confirm ADB debugging is enabled on the TV and that it is on the same LAN as this PC.
+7. Enter the IP in the app and click connect; prompt me to accept the authorization dialog on the TV.
+8. When it works, tell me the connected device, the available shortcuts, and how to enable "Connect on launch" in settings.
+
+Do not install anything on the TV and do not introduce any third-party relay service.
+If winget or the silent install is unavailable, tell me what is missing and give manual install steps first.
+```
+
+### Run from source (development)
 
 Requirements: Windows 10/11, Node.js 22+, scrcpy (which bundles adb).
 

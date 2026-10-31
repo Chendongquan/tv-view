@@ -22,59 +22,96 @@ Windows 桌面应用（Electron）+ 两个命令行小工具（scrcpy / adb 封�
 
 ## 快速开始
 
-### 下载安装包（推荐）
+### 安装版部署（推荐，手动）
 
-从 [GitHub Releases](https://github.com/Chendongquan/tv-view/releases) 下载最新版本：
+#### 1. 安装 scrcpy（一次性）
 
-- `tv-viewer-setup-<版本>-x64.exe`：安装版，创建开始菜单和桌面快捷方式，按用户安装，不需要管理员权限。
-- `tv-viewer-portable-<版本>-x64.exe`：便携版，双击运行；首次启动会解压到临时目录，稍慢一点。
-
-安装包只包含应用本身，不包含 scrcpy / adb。使用前先安装 scrcpy（自带 adb）：
+TV Viewer 安装包只包含应用本身，scrcpy 和 adb 需要单独安装。scrcpy 的 Windows 包自带 adb：
 
 ```bash
 winget install Genymobile.scrcpy
 ```
 
-安装包没有代码签名，Windows SmartScreen 可能提示“未知发布者”；确认文件来自本仓库 Releases 后再运行。
+装完可以验证：
 
-### 用 Agent 从源码配置
+```bash
+scrcpy --version
+adb version
+```
 
-把下面这段贴给 Claude Code 或任何能执行命令的编码 Agent，它会检查依赖、拉代码、安装并连上电视。只需把 `<电视IP>` 换成你的电视地址。
+#### 2. 下载并安装 TV Viewer
+
+从 [GitHub Releases](https://github.com/Chendongquan/tv-view/releases) 下载：
+
+- `tv-viewer-setup-<版本>-x64.exe`：安装版，创建开始菜单和桌面快捷方式，按用户安装，不需要管理员权限。
+- `tv-viewer-portable-<版本>-x64.exe`：便携版，双击运行；首次启动会解压到临时目录，稍慢一点。
+
+可选：下载 `SHA256SUMS.txt` 校验文件完整性：
+
+```powershell
+Get-FileHash .\tv-viewer-setup-0.1.0-x64.exe -Algorithm SHA256
+```
+
+双击安装包，按向导安装。安装包没有代码签名，Windows SmartScreen 可能提示“未知发布者”：点“更多信息 → 仍要运行”，前提是文件来自本仓库 Releases。
+
+#### 3. 连接电视
+
+1. 电视开启 ADB 调试（开发者选项里的「ADB 调试 / 网络调试」）。
+2. 电脑和电视连同一局域网。
+3. 打开 TV Viewer，在连接卡里填电视 IP（不带端口会自动补 `:5555`），点「连接并投屏」。
+4. 第一次连接时电视会弹「允许 USB 调试吗」，用电视遥控器点允许。
+5. 连接成功后画面接管舞台，右侧遥控器点亮。
+
+连不上时先看 [故障排查](docs/TROUBLESHOOTING.md)。
+
+#### 便携版
+
+不想安装就用 `tv-viewer-portable-<版本>-x64.exe`，双击运行。它同样需要先安装 scrcpy。
+
+### 用 Agent 部署安装版（默认）
+
+把下面这段贴给 Claude Code 或任何能执行命令的编码 Agent。它会安装 scrcpy、下载并静默安装 TV Viewer、启动应用并连上电视。把 `<电视IP>` 换成你的电视地址。
 
 ```text
-帮我在这台 Windows 电脑上装好 TV Viewer 并连上我的 Android 电视。
+帮我在这台 Windows 电脑上安装 TV Viewer 并连上我的 Android 电视。
 
-1. 检查 Node.js ≥ 22、scrcpy 和 adb；缺的用 winget 安装（scrcpy 包名 Genymobile.scrcpy）。
-2. 把 https://github.com/Chendongquan/tv-view 克隆到一个合适目录，进入 remote，执行 npm install。
-3. 电视 IP 是 <电视IP>（例如 192.168.50.33，端口默认 5555）。
-   确认电视已开启 ADB 调试、和电脑在同一局域网。
-4. 执行 npm start，在应用里填入 IP 点「连接并投屏」；如连不上，依次检查 adb connect、防火墙和 5555 端口。
-5. 成功后告诉我：已连接的设备、可用的快捷键，以及怎么在设置里打开「启动时自动连接」。
+1. 先安装 scrcpy（应用不内置）：winget install --id Genymobile.scrcpy --accept-source-agreements --accept-package-agreements，并确认 scrcpy --version 和 adb version 可用。
+2. 从 https://github.com/Chendongquan/tv-view/releases/latest 下载 tv-viewer-setup-<最新版本>-x64.exe 和 SHA256SUMS.txt 到临时目录。
+3. 用 SHA256SUMS.txt 校验安装包的 SHA256；不一致就停止并告诉我。
+4. 静默安装：Start-Process -Wait -FilePath <安装包> -ArgumentList '/S'。
+   如果 SmartScreen 或其他安全提示拦截，先告诉我，不要强行绕过。
+5. 安装后从 %LOCALAPPDATA%\Programs 下找到 TV Viewer.exe（或开始菜单快捷方式）并启动。
+6. 电视 IP 是 <电视IP>（默认端口 5555）。确认电视已开启 ADB 调试、和电脑在同一局域网。
+7. 在应用里填入 IP 点「连接并投屏」；电视弹出授权时提示我确认。
+8. 成功后告诉我：已连接的设备、可用的快捷键，以及怎么在设置里打开「启动时自动连接」。
 
 不要往电视上安装任何 App，也不要引入第三方中转服务。
-如果 winget 或 npm 不可用，先告诉我缺什么，再给出手动安装步骤。
+如果 winget 或静默安装不可用，先告诉我缺什么，再给出手动安装步骤。
 ```
 
 <details>
 <summary>English prompt</summary>
 
 ```text
-Set up TV Viewer from source on this Windows PC and connect it to my Android TV.
+Install TV Viewer on this Windows PC and connect it to my Android TV.
 
-1. Check for Node.js >= 22, scrcpy and adb; install anything missing with winget (package: Genymobile.scrcpy).
-2. Clone https://github.com/Chendongquan/tv-view into a sensible directory, then run npm install in remote/.
-3. The TV is at <TV-IP> (for example 192.168.50.33, port 5555 by default).
-   Confirm ADB debugging is enabled on the TV and that it is on the same LAN as this PC.
-4. Run npm start, enter the IP, and click the connect button. If it fails, check adb connect, the firewall, and port 5555.
-5. When it works, tell me the connected device, the available shortcuts, and how to enable "Connect on launch" in settings.
+1. Install scrcpy first (it is not bundled): winget install --id Genymobile.scrcpy --accept-source-agreements --accept-package-agreements, then confirm scrcpy --version and adb version work.
+2. Download tv-viewer-setup-<latest version>-x64.exe and SHA256SUMS.txt from https://github.com/Chendongquan/tv-view/releases/latest into a temporary directory.
+3. Verify the installer SHA256 against SHA256SUMS.txt; stop and tell me if it does not match.
+4. Silent install: Start-Process -Wait -FilePath <installer> -ArgumentList '/S'.
+   If SmartScreen or another security prompt blocks it, tell me first; do not force a bypass.
+5. Find TV Viewer.exe under %LOCALAPPDATA%\Programs (or the Start menu shortcut) and launch it.
+6. The TV is at <TV-IP> (port 5555 by default). Confirm ADB debugging is enabled on the TV and that it is on the same LAN as this PC.
+7. Enter the IP in the app and click connect; prompt me to accept the authorization dialog on the TV.
+8. When it works, tell me the connected device, the available shortcuts, and how to enable "Connect on launch" in settings.
 
 Do not install anything on the TV and do not introduce any third-party relay service.
-If winget or npm is unavailable, tell me what is missing and give manual install steps first.
+If winget or the silent install is unavailable, tell me what is missing and give manual install steps first.
 ```
 
 </details>
 
-### 从源码运行（需要 Node.js 和 scrcpy）
+### 从源码运行（开发）
 
 - Windows 10 / 11
 - Node.js 22+
@@ -82,13 +119,6 @@ If winget or npm is unavailable, tell me what is missing and give manual install
 
 ```bash
 winget install Genymobile.scrcpy
-```
-
-电视需要开启 ADB 调试，电脑和电视在同一局域网。
-
-### 桌面应用
-
-```bash
 cd remote
 npm install
 npm start
